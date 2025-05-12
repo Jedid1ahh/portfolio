@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Oasis Bistro</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍲</text></svg>">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #ff6b35;
+            --secondary-color: #2e4057;
+            --accent-color: #ffd166;
+            --text-color: #333333;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #38b000;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            overflow-x: hidden;
+            background-color: #f8f9fa;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.5s ease;
+        }
+        
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            position: relative;
+        }
+        
+        /* Lightning effect container */
+        .lightning-text {
+            position: relative;
+            display: inline-block;
+        }
+        
+        /* Cart Badge */
+        .cart-icon {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color), #ff8c66);
+            color: white;
+            padding: 150px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        /* Checkout Section */
+        .checkout-section {
+            padding: 100px 0;
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+        
+        .section-title:hover::after {
+            width: 100%;
+        }
+        
+        .checkout-form {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .checkout-form-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .form-control {
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            box-shadow: none;
+            border-color: var(--primary-color);
+        }
+        
+        .floating-label {
+            position: relative;
+        }
+        
+        .floating-label .form-control {
+            padding: 15px;
+            height: auto;
+        }
+        
+        .floating-label .form-label {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            color: #999;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            margin: 0;
+        }
+        
+        .floating-label .form-control:focus + .form-label,
+        .floating-label .form-control:not(:placeholder-shown) + .form-label {
+            top: -10px;
+            left: 10px;
+            font-size: 0.8rem;
+            background-color: white;
+            padding: 0 5px;
+            color: var(--primary-color);
+        }
+        
+        /* Order Summary */
+        .order-summary {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+        }
+        
+        .summary-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .order-item-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .order-item-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+        
+        .order-item-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .order-item-name {
+            font-weight: 500;
+        }
+        
+        .order-item-quantity {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .order-item-price {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .summary-item-label {
+            color: #666;
+        }
+        
+        .summary-item-value {
+            font-weight: 600;
+        }
+        
+        .summary-total {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        /* Payment Method */
+        .payment-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .payment-method {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .payment-method.active {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 107, 53, 0.05);
+        }
+        
+        .payment-method-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .payment-method.active .payment-method-icon {
+            color: var(--primary-color);
+        }
+        
+        .payment-method-name {
+            font-weight: 500;
+        }
+        
+        /* Credit Card Form */
+        .credit-card-form {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .credit-card-form.show {
+            display: block;
+        }
+        
+        .card-input-group {
+            display: flex;
+            gap: 15px;
+        }
+        
+        /* Submit Button */
+        .btn-place-order {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 30px;
+        }
+        
+        .btn-place-order:hover {
+            background-color: darken(var(--primary-color), 10%);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        /* Order Confirmation */
+        .order-confirmation {
+            text-align: center;
+            padding: 50px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+        
+        .confirmation-icon {
+            font-size: 4rem;
+            color: var(--success-color);
+            margin-bottom: 20px;
+        }
+        
+        .confirmation-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        
+        .order-details {
+            margin: 30px 0;
+            text-align: left;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .order-detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .order-detail-label {
+            font-weight: 500;
+        }
+        
+        .btn-home {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-home:hover {
+            background-color: darken(var(--primary-color), 10%);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 80px 0 30px;
+        }
+        
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-social {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            display: flex;
+        }
+        
+        .footer-social li {
+            margin-right: 15px;
+        }
+        
+        .footer-social a {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-social a:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-5px);
+        }
+        
+        .footer-links h5 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .footer-links h5::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 50px;
+            text-align: center;
+        }
+        
+        /* Animations and Effects */
+        /* Lightning Animation */
+        @keyframes lightning {
+            0% {
+                opacity: 0;
+            }
+            10% {
+                opacity: 0;
+            }
+            11% {
+                opacity: 1;
+            }
+            12% {
+                opacity: 0;
+            }
+            20% {
+                opacity: 0;
+            }
+            21% {
+                opacity: 1;
+            }
+            24% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+        
+        .lightning-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            mix-blend-mode: overlay;
+            opacity: 0;
+            pointer-events: none;
+            animation: lightning 5s linear infinite;
+        }
+        
+        /* Scroll Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .fade-in.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .page-header h1 {
+                font-size: 3rem;
+            }
+            
+            .order-summary {
+                margin-top: 30px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .checkout-form, .order-summary {
+                padding: 20px;
+            }
+            
+            .card-input-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .payment-methods {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand lightning-text" href="index.html">
+                Oasis Bistro
+                <div class="lightning-effect"></div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="menu.html">Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="cart.html">
+                            <div class="cart-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="cart-badge">0</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h1 class="fade-in">Checkout</h1>
+                    <p class="fade-in">Complete your order by providing delivery and payment details.</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Checkout Section -->
+    <section class="checkout-section">
+        <div class="container">
+            <div class="row" id="checkoutContent">
+                <div class="col-lg-8 fade-in">
+                    <div class="checkout-form">
+                        <h3 class="checkout-form-title">Delivery Information</h3>
+                        <form id="deliveryForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group floating-label">
+                                        <input type="text" class="form-control" id="firstName" placeholder=" " required>
+                                        <label for="firstName" class="form-label">First Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group floating-label">
+                                        <input type="text" class="form-control" id="lastName" placeholder=" " required>
+                                        <label for="lastName" class="form-label">Last Name</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group floating-label">
+                                <input type="email" class="form-control" id="email" placeholder=" " required>
+                                <label for="email" class="form-label">Email Address</label>
+                            </div>
+                            
+                            <div class="form-group floating-label">
+                                <input type="tel" class="form-control" id="phone" placeholder=" " required>
+                                <label for="phone" class="form-label">Phone Number</label>
+                            </div>
+                            
+                            <div class="form-group floating-label">
+                                <input type="text" class="form-control" id="address" placeholder=" " required>
+                                <label for="address" class="form-label">Delivery Address</label>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group floating-label">
+                                        <input type="text" class="form-control" id="city" placeholder=" " required>
+                                        <label for="city" class="form-label">City</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group floating-label">
+                                        <input type="text" class="form-control" id="zipCode" placeholder=" ">
+                                        <label for="zipCode" class="form-label">Postal/Zip Code</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Delivery Instructions (Optional)</label>
+                                <textarea class="form-control" id="instructions" rows="3" placeholder="Special instructions for delivery"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="checkout-form">
+                        <h3 class="checkout-form-title">Payment Method</h3>
+                        
+                        <div class="payment-methods">
+                            <div class="payment-method active" data-method="card">
+                                <div class="payment-method-icon">
+                                    <i class="far fa-credit-card"></i>
+                                </div>
+                                <div class="payment-method-name">Credit Card</div>
+                            </div>
+                            
+                            <div class="payment-method" data-method="paypal">
+                                <div class="payment-method-icon">
+                                    <i class="fab fa-paypal"></i>
+                                </div>
+                                <div class="payment-method-name">PayPal</div>
+                            </div>
+                            
+                            <div class="payment-method" data-method="bank">
+                                <div class="payment-method-icon">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <div class="payment-method-name">Bank Transfer</div>
+                            </div>
+                            
+                            <div class="payment-method" data-method="cash">
+                                <div class="payment-method-icon">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <div class="payment-method-name">Cash on Delivery</div>
+                            </div>
+                        </div>
+                        
+                        <div class="credit-card-form show" id="cardPaymentForm">
+                            <div class="form-group floating-label">
+                                <input type="text" class="form-control" id="cardName" placeholder=" " required>
+                                <label for="cardName" class="form-label">Name on Card</label>
+                            </div>
+                            
+                            <div class="form-group floating-label">
+                                <input type="text" class="form-control" id="cardNumber" placeholder=" " required>
+                                <label for="cardNumber" class="form-label">Card Number</label>
+                            </div>
+                            
+                            <div class="card-input-group">
+                                <div class="form-group floating-label">
+                                    <input type="text" class="form-control" id="expDate" placeholder=" " required>
+                                    <label for="expDate" class="form-label">Expiration Date (MM/YY)</label>
+                                </div>
+                                
+                                <div class="form-group floating-label">
+                                    <input type="text" class="form-control" id="cvv" placeholder=" " required>
+                                    <label for="cvv" class="form-label">CVV</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-place-order" id="placeOrderBtn">
+                            <i class="fas fa-lock me-2"></i>Place Order
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 fade-in">
+                    <div class="order-summary">
+                        <h3 class="summary-title">Order Summary</h3>
+                        
+                        <div id="orderItems">
+                            <!-- Order items will be dynamically generated here -->
+                        </div>
+                        
+                        <div class="summary-item">
+                            <div class="summary-item-label">Subtotal</div>
+                            <div class="summary-item-value" id="subtotal">₦0</div>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <div class="summary-item-label">Delivery Fee</div>
+                            <div class="summary-item-value" id="deliveryFee">₦0</div>
+                        </div>
+                        
+                        <div class="summary-total">
+                            <div>Total</div>
+                            <div id="total">₦0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Order Confirmation -->
+            <div class="order-confirmation fade-in" id="orderConfirmation">
+                <div class="confirmation-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 class="confirmation-title">Order Confirmed!</h2>
+                <p>Thank you for your order. Your delicious Nigerian cuisine is on its way!</p>
+                
+                <div class="order-details">
+                    <h4 class="mb-3">Order Details</h4>
+                    
+                    <div class="order-detail-item">
+                        <div class="order-detail-label">Order Number:</div>
+                        <div id="orderNumber"></div>
+                    </div>
+                    
+                    <div class="order-detail-item">
+                        <div class="order-detail-label">Estimated Delivery:</div>
+                        <div id="estimatedDelivery"></div>
+                    </div>
+                    
+                    <div class="order-detail-item">
+                        <div class="order-detail-label">Delivery Address:</div>
+                        <div id="confirmationAddress"></div>
+                    </div>
+                    
+                    <div class="order-detail-item">
+                        <div class="order-detail-label">Total Amount:</div>
+                        <div id="confirmationTotal"></div>
+                    </div>
+                </div>
+                
+                <p>A confirmation email has been sent to <span id="confirmationEmail"></span></p>
+                
+                <a href="index.html" class="btn btn-home">
+                    <i class="fas fa-home me-2"></i>Return to Homepage
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <a href="index.html" class="footer-logo">Oasis Bistro</a>
+                    <p>Experience the rich flavors and tradition of authentic Nigerian cuisine in a modern setting.</p>
+                    <ul class="footer-social">
+                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                        <li><a href="#"><i class="fab fa-tiktok"></i></a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-5 mb-md-0">
+                    <div class="footer-links">
+                        <h5>Quick Links</h5>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="about.html">About Us</a></li>
+                            <li><a href="menu.html">Menu</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-5 mb-md-0">
+                    <div class="footer-links">
+                        <h5>Contact Us</h5>
+                        <ul>
+                            <li><a href="#"><i class="fas fa-map-marker-alt me-2"></i>123 Victoria Island, Lagos</a></li>
+                            <li><a href="#"><i class="fas fa-phone me-2"></i>+234 812 345 6789</a></li>
+                            <li><a href="#"><i class="fas fa-envelope me-2"></i>info@oasisbistro.com</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-links">
+                        <h5>Opening Hours</h5>
+                        <ul>
+                            <li>Monday - Friday: 9am - 10pm</li>
+                            <li>Saturday: 10am - 11pm</li>
+                            <li>Sunday: 10am - 9pm</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Oasis Bistro. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Cart functionality
+        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        
+        // Check if cart is empty
+        if (cartItems.length === 0) {
+            window.location.href = 'cart.html';
+        }
+        
+        // Format price
+        function formatPrice(price) {
+            // Remove non-numeric characters
+            const numericPrice = price.replace(/[^0-9]/g, '');
+            return parseInt(numericPrice);
+        }
+        
+        // Calculate subtotal
+        function calculateSubtotal() {
+            return cartItems.reduce((total, item) => {
+                return total + (formatPrice(item.price) * item.quantity);
+            }, 0);
+        }
+        
+        // Calculate delivery fee (10% of subtotal or minimum 500)
+        function calculateDeliveryFee() {
+            const subtotal = calculateSubtotal();
+            const fee = Math.max(500, subtotal * 0.1);
+            return Math.round(fee);
+        }
+        
+        // Calculate total
+        function calculateTotal() {
+            return calculateSubtotal() + calculateDeliveryFee();
+        }
+        
+        // Update cart badge
+        function updateCartBadge() {
+            const cartBadge = document.querySelector('.cart-badge');
+            if (cartBadge) {
+                cartBadge.textContent = cartItems.length;
+            }
+        }
+        
+        // Render order items
+        function renderOrderItems() {
+            const orderItemsContainer = document.getElementById('orderItems');
+            const subtotalElement = document.getElementById('subtotal');
+            const deliveryFeeElement = document.getElementById('deliveryFee');
+            const totalElement = document.getElementById('total');
+            
+            // Render order items
+            orderItemsContainer.innerHTML = cartItems.map(item => `
+                <div class="order-item">
+                    <div class="order-item-info">
+                        <div class="order-item-img">
+                            <img src="${item.image}" alt="${item.name}">
+                        </div>
+                        <div>
+                            <div class="order-item-name">${item.name}</div>
+                            <div class="order-item-quantity">Qty: ${item.quantity}</div>
+                        </div>
+                    </div>
+                    <div class="order-item-price">₦${formatPrice(item.price) * item.quantity}</div>
+                </div>
+            `).join('');
+            
+            // Update summary
+            const subtotal = calculateSubtotal();
+            const deliveryFee = calculateDeliveryFee();
+            const total = calculateTotal();
+            
+            subtotalElement.textContent = `₦${subtotal}`;
+            deliveryFeeElement.textContent = `₦${deliveryFee}`;
+            totalElement.textContent = `₦${total}`;
+        }
+        
+        // Payment method switching
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        const cardPaymentForm = document.getElementById('cardPaymentForm');
+        
+        paymentMethods.forEach(method => {
+            method.addEventListener('click', function() {
+                // Remove active class from all methods
+                paymentMethods.forEach(m => m.classList.remove('active'));
+                
+                // Add active class to clicked method
+                this.classList.add('active');
+                
+                // Show/hide card payment form
+                if (this.getAttribute('data-method') === 'card') {
+                    cardPaymentForm.classList.add('show');
+                } else {
+                    cardPaymentForm.classList.remove('show');
+                }
+            });
+        });
+        
+        // Place order button
+        const placeOrderBtn = document.getElementById('placeOrderBtn');
+        const checkoutContent = document.getElementById('checkoutContent');
+        const orderConfirmation = document.getElementById('orderConfirmation');
+        
+        placeOrderBtn.addEventListener('click', function() {
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const address = document.getElementById('address').value;
+            const city = document.getElementById('city').value;
+            
+            // Validate form
+            if (!firstName || !lastName || !email || !address || !city) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Get selected payment method
+            const selectedMethod = document.querySelector('.payment-method.active').getAttribute('data-method');
+            
+            // Validate card details if credit card is selected
+            if (selectedMethod === 'card') {
+                const cardName = document.getElementById('cardName').value;
+                const cardNumber = document.getElementById('cardNumber').value;
+                const expDate = document.getElementById('expDate').value;
+                const cvv = document.getElementById('cvv').value;
+                
+                if (!cardName || !cardNumber || !expDate || !cvv) {
+                    alert('Please fill in all card details');
+                    return;
+                }
+            }
+            
+            // Process order
+            processOrder(firstName, lastName, email, address, city);
+        });
+        
+        // Process order
+        function processOrder(firstName, lastName, email, address, city) {
+            // Generate random order number
+            const orderNumber = 'OB-' + Math.floor(100000 + Math.random() * 900000);
+            
+            // Calculate estimated delivery time (30-45 minutes from now)
+            const now = new Date();
+            const deliveryTime = new Date(now.getTime() + (30 + Math.floor(Math.random() * 15)) * 60000);
+            const formattedDeliveryTime = deliveryTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            // Set confirmation details
+            document.getElementById('orderNumber').textContent = orderNumber;
+            document.getElementById('estimatedDelivery').textContent = `Today, ${formattedDeliveryTime}`;
+            document.getElementById('confirmationAddress').textContent = `${address}, ${city}`;
+            document.getElementById('confirmationTotal').textContent = `₦${calculateTotal()}`;
+            document.getElementById('confirmationEmail').textContent = email;
+            
+            // Hide checkout form and show confirmation
+            checkoutContent.style.display = 'none';
+            orderConfirmation.style.display = 'block';
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Clear cart
+            localStorage.setItem('cartItems', JSON.stringify([]));
+            cartItems = [];
+            updateCartBadge();
+            
+            // Add order to order history
+            const orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || [];
+            const order = {
+                id: orderNumber,
+                date: new Date().toISOString(),
+                items: JSON.parse(localStorage.getItem('cartItems')),
+                total: calculateTotal(),
+                status: 'Processing',
+                delivery: {
+                    address: `${address}, ${city}`,
+                    estimatedTime: formattedDeliveryTime
+                },
+                customer: {
+                    name: `${firstName} ${lastName}`,
+                    email: email
+                }
+            };
+            
+            orderHistory.push(order);
+            localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartBadge();
+            renderOrderItems();
+            
+            // Initialize fade-in animations
+            const faders = document.querySelectorAll('.fade-in');
+            faders.forEach(fader => {
+                fader.classList.add('appear');
+            });
+            
+            // Initialize lightning effect
+            setInterval(() => {
+                const lightningEffect = document.querySelector('.lightning-effect');
+                if (lightningEffect) {
+                    lightningEffect.style.animation = 'none';
+                    void lightningEffect.offsetWidth; // Trigger reflow
+                    lightningEffect.style.animation = 'lightning 5s linear infinite';
+                }
+            }, 8000);
+            
+            // Prefill form with user data if logged in
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                document.getElementById('email').value = currentUser.email;
+                if (currentUser.name) {
+                    const nameParts = currentUser.name.split(' ');
+                    if (nameParts.length > 0) document.getElementById('firstName').value = nameParts[0];
+                    if (nameParts.length > 1) document.getElementById('lastName').value = nameParts.slice(1).join(' ');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
